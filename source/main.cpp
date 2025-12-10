@@ -76,6 +76,7 @@ periodics::CPowermanager g_powermanager(g_baseTick * 100, g_klmanager, g_rpi, g_
 brain::CBatterymanager g_batteryManager(dummy_value);
 
 /* USER NEW COMPONENT BEGIN */
+brain::CAutonomous g_autonomous(100, g_speedingDriver, g_steeringDriver);
 
 /* USER NEW COMPONENT END */
 
@@ -94,6 +95,7 @@ drivers::CSerialMonitor::CSerialSubscriberMap g_serialMonitorSubscribers = {
     {"kl",             mbed::callback(&g_klmanager,         &brain::CKlmanager::serialCallbackKLCommand)},
     {"batteryCapacity",mbed::callback(&g_batteryManager,    &brain::CBatterymanager::serialCallbackBATTERYCommand)},
     {"resourceMonitor",mbed::callback(&g_resourceMonitor,   &periodics::CResourcemonitor::serialCallbackRESMONCommand)},
+    {"autonomous", mbed::callback(&g_autonomous, &brain::CAutonomous::serialCallbackAutonomousCommand)},
 };
 
 // Create the serial monitor object, which decodes, redirects the messages and transmits the responses.
@@ -111,7 +113,7 @@ utils::CTask* g_taskList[] = {
     &g_resourceMonitor,
     &g_alerts,
     // USER NEW PERIODICS BEGIN
-    
+    &g_autonomous
     // USER NEW PERIODICS END
 }; 
 
