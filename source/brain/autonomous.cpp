@@ -35,6 +35,8 @@ namespace brain
         m_counter++;//increase timer every time this runs
 
         switch(m_state){
+            case IDLE: 
+                break;
             case PHASE_1_FWD:
                 m_speedMotor.setSpeed(150);
                 m_steerMotor.setAngle(0);

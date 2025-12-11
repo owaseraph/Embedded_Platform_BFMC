@@ -20,6 +20,7 @@ namespace brain
                 drivers::CSpeedingMotor& f_speedMotor,
                 drivers::CSteeringMotor& f_steerMotor
             );
+            virtual ~CAutonomous();
             //start moving
             //Command format: #autonomous:1;;
             void serialCallbackAutonomousCommand(char const * message, char * response);
