@@ -251,37 +251,43 @@ namespace brain{
      * @param a                   string to read data 
      * @param b                   string to write data
      * 
-     */
+     * */
+     
     void CRobotStateMachine::serialCallbackVCDcommand(char const * message, char * response)
     {
-        int speed, steer;
-        uint8_t time_deciseconds;
-
-        uint8_t parsed = sscanf(message, "%d;%d;%hhu", &speed, &steer, &time_deciseconds);
+        int speed = 0, steer = 0, temp_time = 0;
+        
+        // CHANGE: parsing format uses commas now "%d,%d,%d"
+        int parsed = sscanf(message, "%d,%d,%d", &speed, &steer, &temp_time);
 
         if(uint8_globalsV_value_of_kl != 30){
             sprintf(response,"kl 30 is required!!");
             return;
         }
 
-        m_targetTime = time_deciseconds;
-
-        if(parsed == 3 && speed < 501 && speed > -501 && steer < 233 && steer > -233)
+        // Validate limits
+        if(parsed == 3 && 
+           speed <= 500 && speed >= -500 && 
+           steer <= 232 && steer >= -232 && 
+           temp_time >= 0 && temp_time <= 255)
         {
-            sprintf(response, "%d;%d;%d", speed, steer, time_deciseconds);
-
+            uint8_t time_deciseconds = (uint8_t)temp_time;
+            
+            m_targetTime = time_deciseconds;
             m_ticksRun = 0;
-
             m_targetTime = time_deciseconds * scale_ds_to_ms;
-
+            
             m_state = 4;
-
             m_steeringControl.setAngle(steer);
             m_speedingControl.setSpeed(speed);
+            
+            // Response with commas too
+            sprintf(response, "%d,%d,%d", speed, steer, time_deciseconds);
         }
         else
         {
-            sprintf(response, "something went wrong");
+            // Debug info
+            sprintf(response, "Err! Parsed:%d Str:'%s'", parsed, message);
         }
     }
 

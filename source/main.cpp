@@ -76,8 +76,7 @@ periodics::CPowermanager g_powermanager(g_baseTick * 100, g_klmanager, g_rpi, g_
 brain::CBatterymanager g_batteryManager(dummy_value);
 
 /* USER NEW COMPONENT BEGIN */
-brain::CAutonomous g_autonomous(100, g_speedingDriver, g_steeringDriver);
-
+brain::CAutonomous g_autonomous(100, g_speedingDriver, g_steeringDriver, g_rpi);
 /* USER NEW COMPONENT END */
 
 // Map for redirecting messages with the key and the callback functions. If the message key equals to one of the enumerated keys, than it will be applied the paired callback function.
@@ -95,7 +94,7 @@ drivers::CSerialMonitor::CSerialSubscriberMap g_serialMonitorSubscribers = {
     {"kl",             mbed::callback(&g_klmanager,         &brain::CKlmanager::serialCallbackKLCommand)},
     {"batteryCapacity",mbed::callback(&g_batteryManager,    &brain::CBatterymanager::serialCallbackBATTERYCommand)},
     {"resourceMonitor",mbed::callback(&g_resourceMonitor,   &periodics::CResourcemonitor::serialCallbackRESMONCommand)},
-    {"autonomous", mbed::callback(&g_autonomous, &brain::CAutonomous::serialCallbackAutonomousCommand)},
+    {"auto",           mbed::callback(&g_autonomous,        &brain::CAutonomous::serialCallbackAutonomousCommand)},
 };
 
 // Create the serial monitor object, which decodes, redirects the messages and transmits the responses.
@@ -112,8 +111,8 @@ utils::CTask* g_taskList[] = {
     &g_powermanager,
     &g_resourceMonitor,
     &g_alerts,
+    &g_autonomous,
     // USER NEW PERIODICS BEGIN
-    &g_autonomous
     // USER NEW PERIODICS END
 }; 
 

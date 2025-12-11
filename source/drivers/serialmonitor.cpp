@@ -95,7 +95,7 @@ namespace drivers{
      *  one for message's content and one for response's content. After the applying the callback function, it will send the response to the other device.
      */
 
-     //Updated Serial Monitor run to work with CRLF
+    //Updated Serial Monitor run to work with CRLF
     void CSerialMonitor::_run()
     {
         if (!m_RxBuffer.isEmpty())
